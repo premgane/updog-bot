@@ -51,4 +51,4 @@ class TweetListener(StreamListener):
 if __name__ == '__main__':
 	listener = TweetListener()
 	stream = Stream(auth, listener)	
-	stream.filter(track=[BOT_NAME])
+	stream.filter(track=['updog'])
