@@ -27,7 +27,7 @@ api = tweepy.API(auth)
 def parseTweet(tweet):
 	handle = '@' + tweet.screen_name
 	replyText = handle + ' What\'s updog?'
-	api.update_status(replyText, in_reply_to_status_id = tweet.tweet_id)
+	api.update_status(status = replyText, in_reply_to_status_id = tweet.tweet_id)
 
 def followUser(tweet):
 	api.create_friendship(tweet.screen_name)
@@ -37,8 +37,8 @@ class Tweet:
 	text = str()
 	hashtags = []
 	urls = []
-	tweet_id = str()
-	screen_name = str()
+	tweet_id = ''
+	screen_name = ''
 	user = {}
 	full = {}
 
