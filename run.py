@@ -24,6 +24,11 @@ auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
 api = tweepy.API(auth)
 
+def unicodeToStr(s):
+	if isinstance(s, unicode):
+		s = str(s)
+	return s
+
 # Posts a response tweet
 def respond(tweet):
 	handle = '@' + tweet.screen_name
@@ -55,13 +60,13 @@ class Tweet:
 	full = {}
 
 	def __init__(self, json):
-		self.text = json.get('text', '')
+		self.text = unicodeToStr(json.get('text', ''))
 		self.hashtags = json.get('entities', {}).get('hashtags', [])
 		self.urls = json.get('entities', {}).get('urls', [])
-		self.tweet_id = json.get('id', '')
+		self.tweet_id = unicodeToStr(json.get('id', ''))
 
 		self.user = json.get('user', {})
-		self.screen_name = self.user.get('screen_name', '')
+		self.screen_name = unicodeToStr(self.user.get('screen_name', ''))
 
 		self.full = json
 
