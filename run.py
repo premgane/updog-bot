@@ -29,6 +29,9 @@ def parseTweet(tweet):
 	replyText = handle + ' What\'s updog?'
 	api.update_status(status = replyText, in_reply_to_status_id = tweet.tweet_id)
 
+def retweet(tweet):
+	api.retweet(tweet.tweet_id)
+
 def followUser(tweet):
 	api.create_friendship(tweet.screen_name)
 
@@ -65,6 +68,7 @@ class TweetListener(StreamListener):
 			return True
 
 		parseTweet(tweet)
+		retweet(tweet)
 		followUser(tweet)
 		return True
 
