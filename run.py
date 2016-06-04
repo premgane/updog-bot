@@ -163,7 +163,7 @@ class TweetListener(StreamListener):
 		print '@' + tweet.screen_name.encode("utf-8") + ': ' + tweet.text.encode("utf-8")
 
 		# Just quit if the tweet is worth ignoring
-		if shouldIgnore(tweet):
+		if shouldIgnoreTweet(tweet):
 			return True
 
 		if not str.startswith(tweet.text, 'RT '):
