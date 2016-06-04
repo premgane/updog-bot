@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import tweepy, time, sys, os, json
+from ConfigParser import SafeConfigParser
 from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
 from tweepy import Stream
@@ -23,18 +24,30 @@ auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
 api = tweepy.API(auth)
 
+def parseTweet(tweet):
+	handle = '@' + tweet.screen_name
+	replyText = handle + ' What\'s updog?'
+	api.update_status(replyText, in_reply_to_status_id = tweet.tweet_id)
 
 # Tweet class with all the information we need for this program (Hashtags and the actual tweet text)
 class Tweet:
 	text = str()
 	hashtags = []
 	urls = []
+	tweet_id = ''
+	screen_name = ''
+	user = {}
 	full = {}
 
 	def __init__(self, json):
 		self.text = json.get('text', '')
 		self.hashtags = json.get('entities', {}).get('hashtags', [])
 		self.urls = json.get('entities', {}).get('urls', [])
+		self.tweet_id = json.get('id', '')
+
+		self.user = json.get('user', {})
+		self.screen_name = self.user.get('screen_name', '')
+
 		self.full = json
 
 # Basic listener which parses the json, creates a tweet, and sends it to parseTweet
