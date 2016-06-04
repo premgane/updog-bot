@@ -72,7 +72,7 @@ def respond(tweet):
 
 	if BOT_NAME in tweet.text.lower() or 'updog bot' in tweet.text.lower() or handle in circularArrayOfHandles:
 		# If they're aware of us, respond with an emoji
-		replyText = replyText + EMOJI_RESPONSE_ARRAY[randint(0, len(EMOJI_RESPONSE_ARRAY))]
+		replyText = replyText + EMOJI_RESPONSE_ARRAY[randint(0, len(EMOJI_RESPONSE_ARRAY)-1)]
 	elif 'what\'s updog' in tweet.text.lower() or 'what is updog' in tweet.text.lower():
 		# If they're asking what it is, only respond with the thinking face emoji
 		replyText = replyText + '🤔'
@@ -192,4 +192,3 @@ if __name__ == '__main__':
 	listener = TweetListener()
 	stream = Stream(auth, listener)	
 	stream.filter(track=['updog', 'Updog'])
-	
