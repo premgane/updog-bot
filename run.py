@@ -108,14 +108,17 @@ def followUser(tweet):
 # Determines whether we should retweet a given tweet or not
 def shouldRetweet(tweet):
 	if BOT_NAME in tweet.text.lower() or 'updog bot' in tweet.text.lower():
+		print 'Not RTing: the tweet mentions us'
 		return False
 
 	# The tweet is quoting us
 	if unicodeToStr(tweet.full.get('quoted_status', {}).get('user', {}).get('screen_name', '')) == BOT_NAME:
+		print 'Not RTing: the tweet quotes us'
 		return False
 
 	# Don't RT if there's a photo or video
 	if 'media' in tweet.full:
+		print 'Not RTing: the tweet contains media'
 		return False
 
 	return True
@@ -124,13 +127,18 @@ def shouldRetweet(tweet):
 def shouldIgnoreTweet(tweet):
 	# Ignore the tweet if it's us or if we think the tweeter is a bot
 	if 'updog' in tweet.screen_name.lower() or 'bot' in tweet.screen_name.lower():
+		print 'Ignoring tweet: The tweeter\'s handle contains updog or bot'
 		return True
 
 	if tweet.screen_name.lower() in BLACKLISTED_USERS:
+		print 'Ignoring tweet: The tweeter is blacklisted'
 		return True
 
 	if tweet.text.lower() in BLACKLISTED_TEXT:
+		print 'Ignoring tweet: The tweet has blacklisted text'
 		return True
+
+	return False
 
 
 # Tweet class with some attributes and the full JSON itself
@@ -164,6 +172,7 @@ class TweetListener(StreamListener):
 
 		# Just quit if the tweet is worth ignoring
 		if shouldIgnoreTweet(tweet):
+			print 'Ignoring tweet'
 			return True
 
 		if not str.startswith(tweet.text, 'RT '):
@@ -179,6 +188,8 @@ class TweetListener(StreamListener):
 		print status
 
 if __name__ == '__main__':
+	print '\n\n-----\nStarting up the updog bot...'
 	listener = TweetListener()
 	stream = Stream(auth, listener)	
 	stream.filter(track=['updog', 'Updog'])
+	
