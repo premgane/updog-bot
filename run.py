@@ -182,7 +182,6 @@ class TweetListener(StreamListener):
 
 		# Just quit if the tweet is worth ignoring
 		if shouldIgnoreTweet(tweet):
-			print 'Ignoring tweet'
 			return True
 
 		if not str.startswith(tweet.text, 'RT '):
