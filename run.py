@@ -9,6 +9,9 @@ from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
 from tweepy import Stream
 
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
 # Our name
 BOT_NAME = 'updogbot'
 
@@ -129,6 +132,8 @@ class TweetListener(StreamListener):
 		# Ignore the tweet if it's us or if we think the tweeter is a bot
 		if BOT_NAME in tweet.screen_name or 'bot' in tweet.screen_name.lower():
 			return True
+
+		
 
 		if not str.startswith(tweet.text, 'RT '):
 			respond(tweet)
