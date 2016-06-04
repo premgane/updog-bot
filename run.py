@@ -132,6 +132,11 @@ def shouldRetweet(tweet):
 		print 'Not RTing: the tweet contains media'
 		return False
 
+	# Don't RT if they're asking what updog is
+	if 'what\'s updog' in tweet.text.lower() or 'what is updog' in tweet.text.lower():
+		print 'Not RTing: the tweet asks what updog is'
+		return False
+
 	return True
 
 # Determines whether the tweet should be ignored entirely
