@@ -34,7 +34,7 @@ auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
 api = tweepy.API(auth)
 
 # To ensure some rate limiting
-MIN_SECS_BETWEEN_RESPONSES = 30
+MIN_SECS_BETWEEN_RESPONSES = 15
 lastResponseTimestamp = time.time()
 
 # Keep track of the latest people we've responded to
@@ -52,7 +52,10 @@ def unicodeToStr(s):
 def respond(tweet):
 	global lastResponseTimestamp
 	global circularArrayPointer
-	if time.time() - lastResponseTimestamp < MIN_SECS_BETWEEN_RESPONSES:
+
+	tweetInterval = time.time() - lastResponseTimestamp
+	if tweetInterval < MIN_SECS_BETWEEN_RESPONSES:
+		print 'Rate limit: Just tweeted ' + tweetInterval + ' secs ago'
 		return
 
 	lastResponseTimestamp = time.time()
@@ -100,7 +103,8 @@ def shouldRetweet(tweet):
 	if BOT_NAME in tweet.text.lower() or 'updog bot' in tweet.text.lower():
 		return False
 
-	if tweet.full.get('quoted_status', {}).get('user', {}).get('screen_name', '') == BOT_NAME:
+	# The tweet is quoting us
+	if unicodeToStr(tweet.full.get('quoted_status', {}).get('user', {}).get('screen_name', '')) == BOT_NAME:
 		return False
 
 	return True
