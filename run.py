@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 
 import tweepy, time, sys, os, json
 from ConfigParser import SafeConfigParser
@@ -19,6 +21,8 @@ CONSUMER_KEY = parser.get('Twitter', 'CONSUMER_KEY')
 CONSUMER_SECRET = parser.get('Twitter', 'CONSUMER_SECRET')
 ACCESS_KEY = parser.get('Twitter', 'ACCESS_KEY')
 ACCESS_SECRET = parser.get('Twitter', 'ACCESS_SECRET')
+
+EMOJI_RESPONSE_ARRAY = ['🤔', '🐶', '🐕', '🐩', '🐺', '🐾']
 
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
@@ -76,9 +80,9 @@ class TweetListener(StreamListener):
 		jsonData = json.loads(data)
 		tweet = Tweet(jsonData)
 
-		print 'From: @' + tweet.screen_name.encode("utf-8") + ', tweet: ' + tweet.text.encode("utf-8")
+		print '@' + tweet.screen_name.encode("utf-8") + ': ' + tweet.text.encode("utf-8")
 
-		if tweet.screen_name == BOT_NAME:
+		if tweet.screen_name == BOT_NAME or 'bot' in tweet.screen_name.lower():
 			return True
 
 		if not str.startswith(tweet.text, 'RT '):
