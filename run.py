@@ -51,6 +51,8 @@ circularArrayPointer = 0
 
 # Update the circular array and increment the pointer
 def updateCircularArray(handle):
+	global circularArrayPointer
+
 	# Insert handle into our list of handles we've last responded to
 	if not handle in circularArrayOfHandles:
 		circularArrayOfHandles[circularArrayPointer] = handle
@@ -69,7 +71,6 @@ def unicodeToStr(s):
 # Posts a response tweet
 def respond(tweet):
 	global lastResponseTimestamp
-	global circularArrayPointer
 
 	tweetInterval = time.time() - lastResponseTimestamp
 	if tweetInterval < MIN_SECS_BETWEEN_RESPONSES:
