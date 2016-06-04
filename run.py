@@ -7,7 +7,7 @@ from tweepy import OAuthHandler
 from tweepy import Stream
 
 # Our name
-BOT_NAME = '@updogbot'
+BOT_NAME = 'updogbot'
 
 TWITTER_LIMIT = 140
 
@@ -29,13 +29,16 @@ def parseTweet(tweet):
 	replyText = handle + ' What\'s updog?'
 	api.update_status(replyText, in_reply_to_status_id = tweet.tweet_id)
 
+def followUser(tweet):
+	api.create_friendship(tweet.screen_name)
+
 # Tweet class with all the information we need for this program (Hashtags and the actual tweet text)
 class Tweet:
 	text = str()
 	hashtags = []
 	urls = []
-	tweet_id = ''
-	screen_name = ''
+	tweet_id = str()
+	screen_name = str()
 	user = {}
 	full = {}
 
@@ -55,7 +58,14 @@ class TweetListener(StreamListener):
 	def on_data(self, data):
 		jsonData = json.loads(data)
 		tweet = Tweet(jsonData)
+
+		print 'From: @' + tweet.screen_name + ', tweet: ' + tweet.text
+
+		if tweet.screen_name == BOT_NAME:
+			return True
+
 		parseTweet(tweet)
+		followUser(tweet)
 		return True
 
 	def on_error(self, status):
@@ -64,4 +74,4 @@ class TweetListener(StreamListener):
 if __name__ == '__main__':
 	listener = TweetListener()
 	stream = Stream(auth, listener)	
-	stream.filter(track=['updog'])
+	stream.filter(track=['updog', 'Updog'])
