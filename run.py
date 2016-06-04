@@ -87,6 +87,16 @@ def followUser(tweet):
 	except tweepy.error.TweepError as err:
 		print("Following user, Tweepy error: {0}".format(err))
 
+# Determines whether we should retweet a given tweet or not
+def shouldRetweet(tweet):
+	if BOT_NAME in tweet.text.lower() or 'updog bot' in tweet.text.lower():
+		return False
+
+	if tweet.full.get('quoted_status', {}).get('user', {}).get('screen_name', '') == BOT_NAME:
+		return False
+
+	return True
+
 # Tweet class with some attributes and the full JSON itself
 class Tweet:
 	text = str()
@@ -123,7 +133,7 @@ class TweetListener(StreamListener):
 		if not str.startswith(tweet.text, 'RT '):
 			respond(tweet)
 		
-		if BOT_NAME not in tweet.text.lower() and 'updog bot' not in tweet.text.lower():
+		if shouldRetweet(tweet):
 			retweet(tweet)
 		
 		followUser(tweet)
