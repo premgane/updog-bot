@@ -38,7 +38,7 @@ MIN_SECS_BETWEEN_RESPONSES = 15
 lastResponseTimestamp = time.time()
 
 # Keep track of the latest people we've responded to
-CIRCULAR_ARRAY_MAX_CAPACITY = 10
+CIRCULAR_ARRAY_MAX_CAPACITY = 4
 circularArrayOfHandles = [''] * CIRCULAR_ARRAY_MAX_CAPACITY
 circularArrayPointer = 0
 
