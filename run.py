@@ -62,7 +62,7 @@ class TweetListener(StreamListener):
 		jsonData = json.loads(data)
 		tweet = Tweet(jsonData)
 
-		print 'From: @' + tweet.screen_name + ', tweet: ' + tweet.text
+		print 'From: @' + tweet.screen_name.encode("utf-8") + ', tweet: ' + tweet.text.encode("utf-8")
 
 		if tweet.screen_name == BOT_NAME:
 			return True
