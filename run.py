@@ -47,6 +47,8 @@ def unicodeToStr(s):
 
 # Posts a response tweet
 def respond(tweet):
+	global lastResponseTimestamp
+	global circularArrayPointer
 	if time.time() - lastResponseTimestamp < MIN_SECS_BETWEEN_RESPONSES:
 		return
 
@@ -55,16 +57,19 @@ def respond(tweet):
 	handle = '@' + tweet.screen_name
 	replyText = handle + ' '
 
-	if BOT_NAME in tweet.text or handle in circularArrayOfHandles:
+	if BOT_NAME in tweet.text.lower() or 'updog bot' in tweet.text.lower() or handle in circularArrayOfHandles:
 		replyText = replyText + EMOJI_RESPONSE_ARRAY[randint(0, len(EMOJI_RESPONSE_ARRAY))]
 	else:
 		replyText = replyText + DEFAULT_RESPONSE
 
 	# Insert handle into our list of handles we've last responded to
-	circularArrayOfHandles[circularArrayPointer] = handle
-	circularArrayPointer = circularArrayPointer + 1
-	if circularArrayPointer >= CIRCULAR_ARRAY_MAX_CAPACITY:
-		circularArrayPointer = 0
+	if not handle in circularArrayOfHandles:
+		circularArrayOfHandles[circularArrayPointer] = handle
+		circularArrayPointer = circularArrayPointer + 1
+		if circularArrayPointer >= CIRCULAR_ARRAY_MAX_CAPACITY:
+			circularArrayPointer = 0
+	
+	print circularArrayOfHandles
 
 	api.update_status(status = replyText, in_reply_to_status_id = tweet.tweet_id)
 
@@ -112,13 +117,14 @@ class TweetListener(StreamListener):
 		print '@' + tweet.screen_name.encode("utf-8") + ': ' + tweet.text.encode("utf-8")
 
 		# Ignore the tweet if it's us or if we think the tweeter is a bot
-		if tweet.screen_name == BOT_NAME or 'bot' in tweet.screen_name.lower():
+		if BOT_NAME in tweet.screen_name or 'bot' in tweet.screen_name.lower():
 			return True
 
 		if not str.startswith(tweet.text, 'RT '):
 			respond(tweet)
 		
-		retweet(tweet)
+		if BOT_NAME not in tweet.text.lower() and 'updog bot' not in tweet.text.lower():
+			retweet(tweet)
 		
 		followUser(tweet)
 		return True
