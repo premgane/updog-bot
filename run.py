@@ -61,8 +61,13 @@ def respond(tweet):
 	replyText = handle + ' '
 
 	if BOT_NAME in tweet.text.lower() or 'updog bot' in tweet.text.lower() or handle in circularArrayOfHandles:
+		# If they're aware of us, respond with an emoji
 		replyText = replyText + EMOJI_RESPONSE_ARRAY[randint(0, len(EMOJI_RESPONSE_ARRAY))]
+	elif 'what\'s updog' in tweet.text.lower() or 'what is updog' in tweet.text.lower():
+		# If they're asking what it is, only respond with the thinking face emoji
+		replyText = replyText + '🤔'
 	else:
+		# Ask what updog is
 		replyText = replyText + DEFAULT_RESPONSE
 
 	# Insert handle into our list of handles we've last responded to
@@ -132,8 +137,6 @@ class TweetListener(StreamListener):
 		# Ignore the tweet if it's us or if we think the tweeter is a bot
 		if BOT_NAME in tweet.screen_name or 'bot' in tweet.screen_name.lower():
 			return True
-
-		
 
 		if not str.startswith(tweet.text, 'RT '):
 			respond(tweet)
