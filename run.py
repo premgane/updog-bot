@@ -29,6 +29,13 @@ ACCESS_SECRET = parser.get('Twitter', 'ACCESS_SECRET')
 EMOJI_RESPONSE_ARRAY = ['🤔', '🐶', '🐕', '🐩', '🐺', '🐾']
 DEFAULT_RESPONSE = 'What\'s updog?'
 
+# Blacklists, all lowercase
+BLACKLISTED_USERS = ['updogband']
+BLACKLISTED_TEXT = ['posey', 'brandie']
+
+with open('badwords.json') as data_file:
+    BLACKLISTED_TEXT.extend(json.load(data_file))
+
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
 api = tweepy.API(auth)
@@ -107,7 +114,24 @@ def shouldRetweet(tweet):
 	if unicodeToStr(tweet.full.get('quoted_status', {}).get('user', {}).get('screen_name', '')) == BOT_NAME:
 		return False
 
+	# Don't RT if there's a photo or video
+	if 'media' in tweet.full:
+		return False
+
 	return True
+
+# Determines whether the tweet should be ignored entirely
+def shouldIgnoreTweet(tweet):
+	# Ignore the tweet if it's us or if we think the tweeter is a bot
+	if 'updog' in tweet.screen_name.lower() or 'bot' in tweet.screen_name.lower():
+		return True
+
+	if tweet.screen_name.lower() in BLACKLISTED_USERS:
+		return True
+
+	if tweet.text.lower() in BLACKLISTED_TEXT:
+		return True
+
 
 # Tweet class with some attributes and the full JSON itself
 class Tweet:
@@ -138,8 +162,8 @@ class TweetListener(StreamListener):
 
 		print '@' + tweet.screen_name.encode("utf-8") + ': ' + tweet.text.encode("utf-8")
 
-		# Ignore the tweet if it's us or if we think the tweeter is a bot
-		if BOT_NAME in tweet.screen_name or 'bot' in tweet.screen_name.lower():
+		# Just quit if the tweet is worth ignoring
+		if shouldIgnore(tweet):
 			return True
 
 		if not str.startswith(tweet.text, 'RT '):
