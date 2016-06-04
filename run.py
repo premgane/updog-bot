@@ -31,7 +31,7 @@ DEFAULT_RESPONSE = 'What\'s updog?'
 
 # Blacklists, all lowercase
 BLACKLISTED_USERS = ['updogband']
-BLACKLISTED_TEXT = ['posey', 'brandie']
+BLACKLISTED_TEXT = ['posey', 'brandie', 'blissbends', 'yoga']
 
 with open('badwords.json') as data_file:
     BLACKLISTED_TEXT.extend(json.load(data_file))
