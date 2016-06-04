@@ -24,18 +24,27 @@ auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
 api = tweepy.API(auth)
 
-def parseTweet(tweet):
+# Posts a response tweet
+def respond(tweet):
 	handle = '@' + tweet.screen_name
 	replyText = handle + ' What\'s updog?'
 	api.update_status(status = replyText, in_reply_to_status_id = tweet.tweet_id)
 
+# RTs the given tweet
 def retweet(tweet):
-	api.retweet(tweet.tweet_id)
+	try:
+		api.retweet(tweet.tweet_id)
+	except tweepy.error.TweepError as err:
+		print("RTing, Tweepy error: {0}".format(err))
 
+# Follows the user who posted the given tweet
 def followUser(tweet):
-	api.create_friendship(tweet.screen_name)
+	try:
+		api.create_friendship(tweet.screen_name)
+	except tweepy.error.TweepError as err:
+		print("Following user, Tweepy error: {0}".format(err))
 
-# Tweet class with all the information we need for this program (Hashtags and the actual tweet text)
+# Tweet class with some attributes and the full JSON itself
 class Tweet:
 	text = str()
 	hashtags = []
@@ -56,7 +65,7 @@ class Tweet:
 
 		self.full = json
 
-# Basic listener which parses the json, creates a tweet, and sends it to parseTweet
+# Basic listener: parse the tweet, respond if appropriate, RT if appropriate, and follow the user
 class TweetListener(StreamListener):
 	def on_data(self, data):
 		jsonData = json.loads(data)
@@ -67,8 +76,11 @@ class TweetListener(StreamListener):
 		if tweet.screen_name == BOT_NAME:
 			return True
 
-		parseTweet(tweet)
+		if not str.startswith(tweet.text, 'RT '):
+			respond(tweet)
+		
 		retweet(tweet)
+		
 		followUser(tweet)
 		return True
 
