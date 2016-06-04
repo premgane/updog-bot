@@ -49,6 +49,17 @@ CIRCULAR_ARRAY_MAX_CAPACITY = 4
 circularArrayOfHandles = [''] * CIRCULAR_ARRAY_MAX_CAPACITY
 circularArrayPointer = 0
 
+# Update the circular array and increment the pointer
+def updateCircularArray(handle):
+	# Insert handle into our list of handles we've last responded to
+	if not handle in circularArrayOfHandles:
+		circularArrayOfHandles[circularArrayPointer] = handle
+		circularArrayPointer = circularArrayPointer + 1
+		if circularArrayPointer >= CIRCULAR_ARRAY_MAX_CAPACITY:
+			circularArrayPointer = 0
+	
+	print circularArrayOfHandles
+
 # Ensure the given object is a str, not a unicode object
 def unicodeToStr(s):
 	if isinstance(s, unicode):
@@ -80,14 +91,7 @@ def respond(tweet):
 		# Ask what updog is
 		replyText = replyText + DEFAULT_RESPONSE
 
-	# Insert handle into our list of handles we've last responded to
-	if not handle in circularArrayOfHandles:
-		circularArrayOfHandles[circularArrayPointer] = handle
-		circularArrayPointer = circularArrayPointer + 1
-		if circularArrayPointer >= CIRCULAR_ARRAY_MAX_CAPACITY:
-			circularArrayPointer = 0
-	
-	print circularArrayOfHandles
+	updateCircularArray(handle)
 
 	api.update_status(status = replyText, in_reply_to_status_id = tweet.tweet_id)
 
@@ -109,6 +113,12 @@ def followUser(tweet):
 def shouldRetweet(tweet):
 	if BOT_NAME in tweet.text.lower() or 'updog bot' in tweet.text.lower():
 		print 'Not RTing: the tweet mentions us'
+		return False
+
+	handle = '@' + tweet.screen_name
+	if handle in circularArrayOfHandles:
+		print 'Not RTing: We recently interacted with this person'
+		updateCircularArray(handle)
 		return False
 
 	# The tweet is quoting us
