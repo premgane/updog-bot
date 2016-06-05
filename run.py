@@ -74,7 +74,7 @@ def respond(tweet):
 
 	tweetInterval = time.time() - lastResponseTimestamp
 	if tweetInterval < MIN_SECS_BETWEEN_RESPONSES:
-		print 'Rate limit: Just tweeted ' + tweetInterval + ' secs ago'
+		print 'Rate limit: Just tweeted ' + str(tweetInterval) + ' secs ago'
 		return
 
 	lastResponseTimestamp = time.time()
