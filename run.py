@@ -143,6 +143,11 @@ def shouldIgnoreTweet(tweet):
 		print 'Ignoring tweet: The tweeter\'s handle contains updog or bot'
 		return True
 
+	# Ignore the tweet if updog is not in it
+	if 'updog' not in tweet.text.lower():
+		print 'Ignoring tweet: Updog not in text'
+		return True
+
 	if tweet.screen_name.lower() in BLACKLISTED_USERS:
 		print 'Ignoring tweet: The tweeter is blacklisted'
 		return True
