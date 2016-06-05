@@ -92,8 +92,6 @@ def respond(tweet):
 		# Ask what updog is
 		replyText = replyText + DEFAULT_RESPONSE
 
-	updateCircularArray(handle)
-
 	api.update_status(status = replyText, in_reply_to_status_id = tweet.tweet_id)
 
 # RTs the given tweet
@@ -119,7 +117,6 @@ def shouldRetweet(tweet):
 	handle = '@' + tweet.screen_name
 	if handle in circularArrayOfHandles:
 		print 'Not RTing: We recently interacted with this person'
-		updateCircularArray(handle)
 		return False
 
 	# The tweet is quoting us
@@ -197,6 +194,8 @@ class TweetListener(StreamListener):
 			retweet(tweet)
 		
 		followUser(tweet)
+
+		updateCircularArray('@' + tweet.screen_name)
 		return True
 
 	def on_error(self, status):
