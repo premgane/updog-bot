@@ -125,7 +125,7 @@ def shouldRetweet(tweet):
 		return False
 
 	# Don't RT if there's a photo or video
-	if 'media' in tweet.full:
+	if len(tweet.media):
 		print 'Not RTing: the tweet contains media'
 		return False
 
@@ -164,19 +164,24 @@ class Tweet:
 	text = str()
 	hashtags = []
 	urls = []
+	media = []
+
 	tweet_id = ''
 	screen_name = ''
 	user = {}
 	full = {}
 
 	def __init__(self, json):
-		self.text = unicodeToStr(json.get('text', ''))
-		self.hashtags = json.get('entities', {}).get('hashtags', [])
-		self.urls = json.get('entities', {}).get('urls', [])
 		self.tweet_id = unicodeToStr(json.get('id', ''))
 
 		self.user = json.get('user', {})
 		self.screen_name = unicodeToStr(self.user.get('screen_name', ''))
+
+		self.text = unicodeToStr(json.get('text', ''))
+
+		self.hashtags = json.get('entities', {}).get('hashtags', [])
+		self.urls = json.get('entities', {}).get('urls', [])
+		self.media = json.get('entities', {}).get('media', [])
 
 		self.full = json
 
