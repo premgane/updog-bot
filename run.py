@@ -166,6 +166,7 @@ def shouldIgnoreTweet(tweet):
 		print 'Not RTing: the tweet is already an RT'
 		return True
 
+	handle = '@' + tweet.screen_name
 	if handle in circularArrayOfHandles:
 		print 'Ignoring tweet: We recently interacted with this user'
 		return True
