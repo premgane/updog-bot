@@ -144,7 +144,7 @@ def shouldIgnoreTweet(tweet):
 		return True
 
 	# Ignore the tweet if updog is not in it
-	if 'updog' not in tweet.text.lower():
+	if 'updog' not in tweet.text.lower() or '#updog' in tweet.text.lower():
 		print 'Ignoring tweet: Updog not in text'
 		return True
 
