@@ -31,7 +31,7 @@ DEFAULT_RESPONSE = 'What\'s updog?'
 
 # Blacklists, all lowercase
 BLACKLISTED_USERS = ['updogband']
-BLACKLISTED_TEXT = ['posey', 'brandie', 'blissbends', 'yoga']
+BLACKLISTED_TEXT = ['posey', 'brandie', 'blissbends', 'yoga', 'tour']
 
 with open('badwords.json') as data_file:
     BLACKLISTED_TEXT.extend(json.load(data_file))
@@ -152,9 +152,10 @@ def shouldIgnoreTweet(tweet):
 		print 'Ignoring tweet: The tweeter is blacklisted'
 		return True
 
-	if tweet.text.lower() in BLACKLISTED_TEXT:
-		print 'Ignoring tweet: The tweet has blacklisted text'
-		return True
+	for badword in BLACKLISTED_TEXT:
+		if badword in tweet.text.lower():
+			print 'Ignoring tweet: The tweet has blacklisted text'
+			return True
 
 	return False
 
