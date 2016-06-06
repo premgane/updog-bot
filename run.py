@@ -82,7 +82,7 @@ def respond(tweet):
 	handle = '@' + tweet.screen_name
 	replyText = handle + ' '
 
-	if BOT_NAME in tweet.text.lower() or 'updog bot' in tweet.text.lower() or handle in circularArrayOfHandles:
+	if BOT_NAME in tweet.text.lower() or 'updog bot' in tweet.text.lower():
 		# If they're aware of us, respond with an emoji
 		replyText = replyText + EMOJI_RESPONSE_ARRAY[randint(0, len(EMOJI_RESPONSE_ARRAY)-1)]
 	elif 'what\'s updog' in tweet.text.lower() or 'what is updog' in tweet.text.lower():
@@ -141,6 +141,10 @@ def shouldIgnoreTweet(tweet):
 	# Ignore the tweet if updog is not in it
 	if 'updog' not in tweet.text.lower():
 		print 'Ignoring tweet: Updog not in text'
+		return True
+
+	if handle in circularArrayOfHandles:
+		print 'Ignoring tweet: We recently interacted with this user'
 		return True
 
 	# Don't RT if there's a photo or video
