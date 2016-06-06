@@ -139,7 +139,7 @@ def shouldRetweet(tweet):
 # Determines whether the tweet should be ignored entirely
 def shouldIgnoreTweet(tweet):
 	# Ignore the tweet if it's us or if we think the tweeter is a bot
-	if 'updog' in tweet.screen_name.lower() or 'bot' in tweet.screen_name.lower():
+	if 'updog' in tweet.screen_name.lower() or 'bot' in tweet.screen_name.lower() or 'ebooks' in tweet.screen_name.lower():
 		print 'Ignoring tweet: The tweeter\'s handle contains updog or bot'
 		return True
 
