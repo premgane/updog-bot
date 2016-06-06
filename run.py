@@ -129,6 +129,11 @@ def shouldRetweet(tweet):
 		print 'Not RTing: the tweet asks what updog is'
 		return False
 
+	# Don't RT if it's a reply to someone
+	if tweet.text[0] == '@':
+		print 'Not RTing: the tweet is a reply to someone'
+		return False
+
 	return True
 
 # Determines whether the tweet should be ignored entirely
@@ -151,7 +156,7 @@ def shouldIgnoreTweet(tweet):
 	if len(tweet.media):
 		print 'Not RTing: the tweet contains media'
 		return True
-	
+
 	if str.startswith(tweet.text, 'RT '):
 		print 'Not RTing: the tweet is already an RT'
 		return True
@@ -205,15 +210,16 @@ class TweetListener(StreamListener):
 		# Just quit if the tweet is worth ignoring
 		if shouldIgnoreTweet(tweet):
 			return True
-
-		respond(tweet)
 		
 		if shouldRetweet(tweet):
 			retweet(tweet)
 		
+		respond(tweet)
+
 		followUser(tweet)
 
 		updateCircularArray('@' + tweet.screen_name)
+
 		return True
 
 	def on_error(self, status):
