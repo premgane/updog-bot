@@ -148,8 +148,9 @@ def shouldIgnoreTweet(tweet):
 		print 'Ignoring tweet: Updog not in text'
 		return True
 
-	if handle in circularArrayOfHandles:
-		print 'Ignoring tweet: We recently interacted with this user'
+	MAX_HASHTAGS = 3
+	if tweet.text.count('#') > MAX_HASHTAGS:
+		print 'Ignoring tweet: Too many hashtags'
 		return True
 
 	if len(tweet.urls):
@@ -163,6 +164,10 @@ def shouldIgnoreTweet(tweet):
 
 	if str.startswith(tweet.text, 'RT '):
 		print 'Not RTing: the tweet is already an RT'
+		return True
+
+	if handle in circularArrayOfHandles:
+		print 'Ignoring tweet: We recently interacted with this user'
 		return True
 
 	if tweet.screen_name.lower() in BLACKLISTED_USERS:
