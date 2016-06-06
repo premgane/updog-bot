@@ -152,6 +152,10 @@ def shouldIgnoreTweet(tweet):
 		print 'Ignoring tweet: We recently interacted with this user'
 		return True
 
+	if len(tweet.urls):
+		print 'Not RTing: the tweet contains URLs'
+		return True
+
 	# Don't RT if there's a photo or video
 	if len(tweet.media):
 		print 'Not RTing: the tweet contains media'
