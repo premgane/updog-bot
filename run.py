@@ -124,11 +124,6 @@ def shouldRetweet(tweet):
 		print 'Not RTing: the tweet quotes us'
 		return False
 
-	# Don't RT if there's a photo or video
-	if len(tweet.media):
-		print 'Not RTing: the tweet contains media'
-		return False
-
 	# Don't RT if they're asking what updog is
 	if 'what\'s updog' in tweet.text.lower() or 'what is updog' in tweet.text.lower():
 		print 'Not RTing: the tweet asks what updog is'
@@ -146,6 +141,11 @@ def shouldIgnoreTweet(tweet):
 	# Ignore the tweet if updog is not in it
 	if 'updog' not in tweet.text.lower():
 		print 'Ignoring tweet: Updog not in text'
+		return True
+
+	# Don't RT if there's a photo or video
+	if len(tweet.media):
+		print 'Not RTing: the tweet contains media'
 		return True
 
 	if tweet.screen_name.lower() in BLACKLISTED_USERS:
