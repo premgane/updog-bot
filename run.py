@@ -151,6 +151,10 @@ def shouldIgnoreTweet(tweet):
 	if len(tweet.media):
 		print 'Not RTing: the tweet contains media'
 		return True
+	
+	if str.startswith(tweet.text, 'RT '):
+		print 'Not RTing: the tweet is already an RT'
+		return True
 
 	if tweet.screen_name.lower() in BLACKLISTED_USERS:
 		print 'Ignoring tweet: The tweeter is blacklisted'
@@ -202,8 +206,7 @@ class TweetListener(StreamListener):
 		if shouldIgnoreTweet(tweet):
 			return True
 
-		if not str.startswith(tweet.text, 'RT '):
-			respond(tweet)
+		respond(tweet)
 		
 		if shouldRetweet(tweet):
 			retweet(tweet)
