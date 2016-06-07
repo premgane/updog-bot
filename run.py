@@ -27,7 +27,7 @@ ACCESS_KEY = parser.get('Twitter', 'ACCESS_KEY')
 ACCESS_SECRET = parser.get('Twitter', 'ACCESS_SECRET')
 
 EMOJI_RESPONSE_ARRAY = ['🤔', '🐶', '🐕', '🐩', '🐺', '🐾']
-DEFAULT_RESPONSE = 'What\'s updog?'
+DEFAULT_RESPONSES = ['What\'s updog?', 'what\'s updog?', 'What\'s updog', 'what\'s updog', 'What\'s Updog?', 'what\'s Updog?', 'What\'s Updog', 'what\'s Updog']
 
 # Blacklists, all lowercase
 BLACKLISTED_USERS = ['updogband']
@@ -90,7 +90,7 @@ def respond(tweet):
 		replyText = replyText + '🤔'
 	else:
 		# Ask what updog is
-		replyText = replyText + DEFAULT_RESPONSE
+		replyText = replyText + DEFAULT_RESPONSES[randint(0, len(DEFAULT_RESPONSES)-1)]
 
 	api.update_status(status = replyText, in_reply_to_status_id = tweet.tweet_id)
 
